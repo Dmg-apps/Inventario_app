@@ -32,6 +32,7 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
     { id: 'recipes', label: 'Recetas IA', icon: ChefHat, emoji: '👨‍🍳' },
     { id: 'alerts', label: 'Alertas', icon: Bell, emoji: '⏰', badge: expiringProducts.length },
     { id: 'settings', label: 'Ajustes', icon: Settings, emoji: '⚙️' },
+    { id: 'ecc', label: 'ECC', icon: Settings, emoji: '🤖' },
   ];
 
   return (

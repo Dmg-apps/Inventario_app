@@ -38,6 +38,17 @@ Este proyecto implementa las mejores prácticas de diseño de Emil Kowalski:
 
 Ver [`SKILLS-DISENO.md`](./SKILLS-DISENO.md) para detalles completos.
 
+## 🤖 Integración con ECC (Everything Claude Code)
+
+Este proyecto está optimizado con **ECC**, el sistema de optimización de rendimiento para agentes de IA:
+
+- ✅ **123+ Skills** reutilizables
+- ✅ **69+ Agentes** especializados
+- ✅ **78 Comandos** para automatización
+- ✅ **Seguridad empresarial** con AgentShield
+
+Ver [`ECC-INTEGRACION.md`](./ECC-INTEGRACION.md) para guía completa de integración.
+
 ## 🚀 Tecnologías
 
 - **Frontend**: React + TypeScript + Vite
