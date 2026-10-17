@@ -1,5 +1,7 @@
 {
-  "name": "sandbox-workspace",
+  "name": "mi-despensa",
+  "version": "1.0.0",
+  "description": "Aplicación de inventario inteligente para el hogar con alertas de caducidad, recetas con IA y soporte NFC",
   "private": true,
   "type": "module",
   "scripts": {
