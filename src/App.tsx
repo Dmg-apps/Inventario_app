@@ -9,7 +9,7 @@ import RecipesPage from './pages/RecipesPage';
 import AlertsPage from './pages/AlertsPage';
 import SettingsPage from './pages/SettingsPage';
 import DownloadPage from './pages/DownloadPage';
-import ECCInfoPage from './pages/ECCInfoPage';
+import ImportPage from './pages/ImportPage';
 
 export default function App() {
   const { isAuthenticated } = useStore();
@@ -35,8 +35,8 @@ export default function App() {
         return <SettingsPage />;
       case 'download':
         return <DownloadPage />;
-      case 'ecc':
-        return <ECCInfoPage />;
+      case 'import':
+        return <ImportPage />;
       default:
         return <Dashboard onNavigate={setCurrentPage} />;
     }

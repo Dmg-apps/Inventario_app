@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../store/useStore';
 import { 
   Home, MapPin, Package, ChefHat, Bell, Settings, LogOut, 
-  Menu, X, Plus, AlertTriangle, Download
+  Menu, X, Plus, AlertTriangle, Download, Upload
 } from 'lucide-react';
 import { getExpirationStatus } from '../lib/utils';
 
@@ -32,7 +32,6 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
     { id: 'recipes', label: 'Recetas IA', icon: ChefHat, emoji: '👨‍🍳' },
     { id: 'alerts', label: 'Alertas', icon: Bell, emoji: '⏰', badge: expiringProducts.length },
     { id: 'settings', label: 'Ajustes', icon: Settings, emoji: '⚙️' },
-    { id: 'ecc', label: 'ECC', icon: Settings, emoji: '🤖' },
   ];
 
   return (
@@ -186,6 +185,15 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
                   />
                 </motion.button>
               )}
+              <motion.button
+                onClick={() => onNavigate('import')}
+                whileTap={{ scale: 0.97 }}
+                className="flex items-center gap-2 px-4 py-2.5 bg-[#1a1a1a] text-[#fafafa] text-sm font-medium rounded-xl border border-[#262626] hover:border-[#333] hover:bg-[#262626] transition-all duration-200"
+                title="Importar Excel"
+              >
+                <Upload className="w-4 h-4" />
+                <span className="hidden sm:inline">Importar</span>
+              </motion.button>
               <motion.button
                 onClick={() => onNavigate('products')}
                 whileTap={{ scale: 0.97 }}

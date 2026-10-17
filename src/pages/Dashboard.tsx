@@ -255,6 +255,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           <h3 className="text-base font-bold text-[#fafafa] mb-6">Acciones rápidas</h3>
           <div className="space-y-3">
             {[
+              { emoji: '📊', label: 'Importar Excel', page: 'import', color: 'from-orange-500/20 to-amber-500/20', highlight: totalProducts === 0 },
               { emoji: '📦', label: 'Añadir producto', page: 'products', color: 'from-emerald-500/20 to-teal-500/20' },
               { emoji: '📍', label: 'Nuevo lugar', page: 'locations', color: 'from-blue-500/20 to-cyan-500/20' },
               { emoji: '👨‍🍳', label: 'Generar recetas', page: 'recipes', color: 'from-purple-500/20 to-pink-500/20' },
@@ -267,11 +268,16 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                 transition={{ delay: 0.5 + i * 0.1 }}
                 whileTap={{ scale: 0.97 }}
                 whileHover={{ x: 4 }}
-                className={`w-full flex items-center gap-4 p-4 bg-gradient-to-r ${action.color} border border-[#262626] rounded-2xl hover:border-[#333] transition-all duration-200 text-left`}
+                className={`w-full flex items-center gap-4 p-4 bg-gradient-to-r ${action.color} border-2 ${
+                  action.highlight ? 'border-orange-500/40' : 'border-[#262626]'
+                } rounded-2xl hover:border-[#333] transition-all duration-200 text-left relative`}
               >
                 <span className="text-3xl">{action.emoji}</span>
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-[#fafafa]">{action.label}</p>
+                  {action.highlight && (
+                    <p className="text-xs text-orange-300 mt-0.5">¡Empieza aquí!</p>
+                  )}
                 </div>
                 <ArrowRight className="w-4 h-4 text-[#525252]" />
               </motion.button>

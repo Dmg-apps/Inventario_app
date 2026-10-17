@@ -38,53 +38,38 @@ Este proyecto implementa las mejores prácticas de diseño de Emil Kowalski:
 
 Ver [`SKILLS-DISENO.md`](./SKILLS-DISENO.md) para detalles completos.
 
-## 🤖 Desarrollo con ECC (Everything Claude Code)
+## 📊 Importar desde Excel
 
-Este proyecto se desarrolla usando **todas las skills de ECC** para garantizar la máxima calidad:
+Puedes importar tu inventario completo desde un archivo Excel. La app incluye una plantilla descargable con ejemplos.
 
-### Skills Aplicadas
+### Formato del Excel
 
-- ✅ **`/react-review`** - Code review de React antes de cada commit
-- ✅ **`/typescript-review`** - Revisión de tipos TypeScript
-- ✅ **`/react-test`** - Tests unitarios generados automáticamente
-- ✅ **`/security-scan`** - Escaneo de vulnerabilidades de seguridad
-- ✅ **`/react-performance`** - Optimización de rendimiento
-- ✅ **`/a11y-review`** - Revisión de accesibilidad (WCAG AA)
-- ✅ **`/ecc-conventions`** - Convenciones de código aplicadas
-- ✅ **`/ecc-guardrails`** - Guardarrailes de seguridad
+El archivo debe tener 3 hojas:
 
-### Workflows Automatizados
+**Hoja 1: Casas**
+- `nombre` (obligatorio)
+- `direccion` (opcional)
 
-```bash
-# Antes de cada commit
-/react-review && /security-scan && npm test
+**Hoja 2: Lugares**
+- `casa` (obligatorio) - nombre de la casa
+- `nombre` (obligatorio) - nombre del lugar
+- `icono` (opcional) - emoji
+- `descripcion` (opcional)
 
-# Antes de cada PR
-/react-performance && /a11y-review && /bundle-analyzer
-
-# Antes de deploy
-/security-review && /build-review && npm run build
-```
-
-Ver [`ECC-USO.md`](./ECC-USO.md) para guía completa de uso de todas las skills.
-
-### 📚 Documentación ECC Completa
-
-- [`ECC-USO.md`](./ECC-USO.md) - Guía detallada de uso de cada skill
-- [`WORKFLOWS-ECC.md`](./WORKFLOWS-ECC.md) - Workflows automatizados
-- [`SKILLS-APLICADAS.md`](./SKILLS-APLICADAS.md) - Lista completa de skills aplicadas
-- [`ECC-INTEGRACION.md`](./ECC-INTEGRACION.md) - Guía de integración
-
-### 📊 Métricas de Calidad con ECC
-
-| Métrica | Antes | Después |
-|---------|-------|---------|
-| Code Coverage | ~40% | **85%** ✅ |
-| TypeScript Strict | 60% | **100%** ✅ |
-| Accessibility Score | ~70 | **95** ✅ |
-| Performance Score | ~75 | **92** ✅ |
-| Security Issues | 15+ | **0 críticos** ✅ |
-| Skills Aplicadas | 0 | **24/24 (100%)** ✅ |
+**Hoja 3: Productos**
+- `casa` (obligatorio)
+- `lugar` (obligatorio)
+- `nombre` (obligatorio)
+- `tipo` (opcional) - food, medicine, cleaning, bathroom, other
+- `categoria` (opcional)
+- `cantidad` (opcional)
+- `unidad` (opcional) - ud, kg, g, l, ml, pack
+- `fecha_caducidad` (opcional) - formato YYYY-MM-DD
+- `fecha_apertura` (opcional) - formato YYYY-MM-DD
+- `dosis` (opcional) - solo medicamentos
+- `frecuencia` (opcional) - solo medicamentos
+- `nivel` (opcional) - full, medium, low, empty (solo limpieza/baño)
+- `notas` (opcional)
 
 ## 🚀 Tecnologías
 
