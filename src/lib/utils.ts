@@ -53,17 +53,47 @@ export function getExpirationLabel(status: ReturnType<typeof getExpirationStatus
 }
 
 export const CATEGORIES = [
-  { id: 'frutas', name: 'Frutas y Verduras', icon: '🥬' },
-  { id: 'lacteos', name: 'Lácteos', icon: '🥛' },
-  { id: 'carnes', name: 'Carnes y Pescados', icon: '🥩' },
-  { id: 'panaderia', name: 'Panadería', icon: '🍞' },
-  { id: 'bebidas', name: 'Bebidas', icon: '🥤' },
-  { id: 'congelados', name: 'Congelados', icon: '🧊' },
-  { id: 'conservas', name: 'Conservas', icon: '🥫' },
-  { id: 'limpieza', name: 'Limpieza', icon: '🧹' },
-  { id: 'higiene', name: 'Higiene', icon: '🧴' },
-  { id: 'medicamentos', name: 'Medicamentos', icon: '💊' },
-  { id: 'otros', name: 'Otros', icon: '📦' },
+  // Alimentos
+  { id: 'frutas', name: 'Frutas y Verduras', icon: '🥬', type: 'food' },
+  { id: 'lacteos', name: 'Lácteos', icon: '🥛', type: 'food' },
+  { id: 'carnes', name: 'Carnes y Pescados', icon: '🥩', type: 'food' },
+  { id: 'panaderia', name: 'Panadería', icon: '🍞', type: 'food' },
+  { id: 'bebidas', name: 'Bebidas', icon: '🥤', type: 'food' },
+  { id: 'congelados', name: 'Congelados', icon: '🧊', type: 'food' },
+  { id: 'conservas', name: 'Conservas y Despensa', icon: '🥫', type: 'food' },
+  { id: 'snacks', name: 'Snacks y Dulces', icon: '🍪', type: 'food' },
+  { id: 'especias', name: 'Especias y Salsas', icon: '🧂', type: 'food' },
+  
+  // Medicamentos
+  { id: 'medicamentos', name: 'Medicamentos', icon: '💊', type: 'medicine' },
+  { id: 'vitaminas', name: 'Vitaminas y Suplementos', icon: '💉', type: 'medicine' },
+  { id: 'primeros_auxilios', name: 'Primeros Auxilios', icon: '🩹', type: 'medicine' },
+  
+  // Limpieza
+  { id: 'limpieza_cocina', name: 'Limpieza Cocina', icon: '🧽', type: 'cleaning' },
+  { id: 'limpieza_bano', name: 'Limpieza Baño', icon: '🚿', type: 'cleaning' },
+  { id: 'limpieza_general', name: 'Limpieza General', icon: '🧹', type: 'cleaning' },
+  { id: 'lavanderia', name: 'Lavandería', icon: '🧺', type: 'cleaning' },
+  
+  // Baño e Higiene
+  { id: 'higiene_personal', name: 'Higiene Personal', icon: '🧴', type: 'bathroom' },
+  { id: 'cuidado_cabello', name: 'Cuidado Cabello', icon: '💇', type: 'bathroom' },
+  { id: 'cuidado_piel', name: 'Cuidado Piel', icon: '🧖', type: 'bathroom' },
+  { id: 'higiene_bucal', name: 'Higiene Bucal', icon: '🦷', type: 'bathroom' },
+  { id: 'papel_higienico', name: 'Papel y Toallas', icon: '🧻', type: 'bathroom' },
+  
+  // Otros
+  { id: 'mascotas', name: 'Mascotas', icon: '🐾', type: 'other' },
+  { id: 'bebe', name: 'Bebé', icon: '👶', type: 'other' },
+  { id: 'otros', name: 'Otros', icon: '📦', type: 'other' },
+];
+
+export const PRODUCT_TYPES = [
+  { id: 'food', name: 'Alimentos', icon: '🍽️', color: 'emerald' },
+  { id: 'medicine', name: 'Medicamentos', icon: '💊', color: 'red' },
+  { id: 'cleaning', name: 'Limpieza', icon: '🧹', color: 'blue' },
+  { id: 'bathroom', name: 'Baño e Higiene', icon: '🧴', color: 'purple' },
+  { id: 'other', name: 'Otros', icon: '📦', color: 'gray' },
 ];
 
 export const UNITS = [

@@ -31,8 +31,8 @@ export default function RecipesPage() {
     
     // Filter products by category if selected
     const availableProducts = selectedCategory 
-      ? houseProducts.filter(p => p.category === selectedCategory)
-      : houseProducts;
+      ? houseProducts.filter(p => p.category === selectedCategory && p.productType === 'food')
+      : houseProducts.filter(p => p.productType === 'food');
 
     // Prioritize expiring products
     const expiringProducts = availableProducts.filter(p => {

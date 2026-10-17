@@ -6,7 +6,12 @@ Aplicación web para gestionar el inventario de tu hogar con alertas de caducida
 
 - 🏠 **Múltiples casas**: Gestiona diferentes hogares desde una sola cuenta
 - 📍 **Ubicaciones personalizadas**: Organiza productos por lugares (nevera, despensa, baño...)
-- 📦 **Inventario completo**: Categorías, cantidades, unidades y notas
+- 📦 **Inventario completo**: 5 tipos de productos con campos específicos
+  - 🍽️ **Alimentos**: Fecha de caducidad y fecha de apertura
+  - 💊 **Medicamentos**: Dosis, frecuencia, caducidad
+  - 🧹 **Limpieza**: Nivel de llenado (lleno/medio/bajo/vacío)
+  - 🧴 **Baño e Higiene**: Nivel de llenado
+  - 📦 **Otros**: Productos generales
 - ⏰ **Alertas de caducidad**: Notificaciones de productos próximos a caducar
 - 🤖 **Recetas con IA**: Genera recetas basadas en tus ingredientes disponibles
 - 📱 **Soporte NFC**: Asocia tags NFC a ubicaciones para acceso rápido

@@ -2,11 +2,11 @@ import { motion } from 'framer-motion';
 import { useStore } from '../store/useStore';
 import { 
   Package, MapPin, AlertTriangle, TrendingUp,
-  ArrowRight, Plus
+  ArrowRight, Plus, Apple, Pill, Droplets, Bath
 } from 'lucide-react';
 import { 
   getExpirationStatus, getExpirationColor, 
-  getExpirationLabel, formatRelativeDate, CATEGORIES 
+  getExpirationLabel, formatRelativeDate, CATEGORIES, PRODUCT_TYPES
 } from '../lib/utils';
 
 interface DashboardProps {
@@ -163,7 +163,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           </div>
         </motion.div>
 
-        {/* Categories */}
+        {/* By type */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -171,22 +171,29 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           className="bg-[#141414] border border-[#262626] rounded-xl"
         >
           <div className="p-4 border-b border-[#1a1a1a]">
-            <h3 className="text-sm font-semibold text-[#fafafa]">Por categoría</h3>
+            <h3 className="text-sm font-semibold text-[#fafafa]">Por tipo</h3>
           </div>
-          <div className="p-4 space-y-2">
-            {categoryBreakdown.length === 0 ? (
-              <p className="text-xs text-[#525252] text-center py-4">Añade productos para ver categorías</p>
-            ) : (
-              categoryBreakdown.map((cat) => (
-                <div key={cat.id} className="flex items-center justify-between">
+          <div className="p-4 space-y-3">
+            {PRODUCT_TYPES.map((type) => {
+              const count = houseProducts.filter(p => p.productType === type.id).length;
+              const IconComponent = type.id === 'food' ? Apple : type.id === 'medicine' ? Pill : type.id === 'cleaning' ? Droplets : type.id === 'bathroom' ? Bath : Package;
+              const colorClass = type.color === 'emerald' ? 'text-emerald-400 bg-emerald-400/10' :
+                type.color === 'red' ? 'text-red-400 bg-red-400/10' :
+                type.color === 'blue' ? 'text-blue-400 bg-blue-400/10' :
+                type.color === 'purple' ? 'text-purple-400 bg-purple-400/10' :
+                'text-[#525252] bg-[#1a1a1a]';
+              return (
+                <div key={type.id} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span>{cat.icon}</span>
-                    <span className="text-xs text-[#a1a1a1]">{cat.name}</span>
+                    <span className={`p-1.5 rounded-lg ${colorClass}`}>
+                      <IconComponent className="w-3.5 h-3.5" />
+                    </span>
+                    <span className="text-xs text-[#a1a1a1]">{type.name}</span>
                   </div>
-                  <span className="text-xs font-mono text-[#525252]">{cat.count}</span>
+                  <span className="text-xs font-mono text-[#525252]">{count}</span>
                 </div>
-              ))
-            )}
+              );
+            })}
           </div>
         </motion.div>
       </div>

@@ -30,9 +30,14 @@ interface Product {
   locationId: string;
   name: string;
   category: string;
+  productType: 'food' | 'medicine' | 'cleaning' | 'bathroom' | 'other';
   quantity: number;
   unit: string;
   expirationDate?: string;
+  openedDate?: string; // Fecha de apertura (para alimentos y medicamentos)
+  dosage?: string; // Dosis (para medicamentos)
+  frequency?: string; // Frecuencia de toma (para medicamentos)
+  fillLevel?: 'full' | 'medium' | 'low' | 'empty'; // Nivel para limpieza/baño
   barcode?: string;
   notes?: string;
   createdAt: string;
