@@ -8,6 +8,7 @@ import ProductsPage from './pages/ProductsPage';
 import RecipesPage from './pages/RecipesPage';
 import AlertsPage from './pages/AlertsPage';
 import SettingsPage from './pages/SettingsPage';
+import DownloadPage from './pages/DownloadPage';
 
 export default function App() {
   const { isAuthenticated } = useStore();
@@ -31,6 +32,8 @@ export default function App() {
         return <AlertsPage />;
       case 'settings':
         return <SettingsPage />;
+      case 'download':
+        return <DownloadPage />;
       default:
         return <Dashboard onNavigate={setCurrentPage} />;
     }

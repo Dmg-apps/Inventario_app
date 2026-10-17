@@ -1,13 +1,7 @@
 import { motion } from 'framer-motion';
 import { useStore } from '../store/useStore';
-import { 
-  Package, MapPin, AlertTriangle, TrendingUp,
-  ArrowRight, Plus, Apple, Pill, Droplets, Bath
-} from 'lucide-react';
-import { 
-  getExpirationStatus, getExpirationColor, 
-  getExpirationLabel, formatRelativeDate, CATEGORIES, PRODUCT_TYPES
-} from '../lib/utils';
+import { ArrowRight, Plus, TrendingUp, Package, MapPin, AlertTriangle } from 'lucide-react';
+import { getExpirationStatus, getExpirationColor, CATEGORIES } from '../lib/utils';
 
 interface DashboardProps {
   onNavigate: (page: string) => void;
@@ -18,97 +12,104 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   
   const currentHouse = houses.find(h => h.id === currentHouseId);
   const houseLocations = locations.filter(l => l.houseId === currentHouseId);
-  const houseProducts = products.filter(p => 
-    houseLocations.some(l => l.id === p.locationId)
-  );
+  const houseProducts = products.filter(p => houseLocations.some(l => l.id === p.locationId));
 
-  // Stats
   const totalProducts = houseProducts.length;
   const totalLocations = houseLocations.length;
   const expiringProducts = houseProducts.filter(p => {
     const status = getExpirationStatus(p.expirationDate);
     return status === 'expired' || status === 'today' || status === 'soon';
   });
-  const expiredProducts = houseProducts.filter(p => 
-    getExpirationStatus(p.expirationDate) === 'expired'
-  );
 
-  // Category breakdown
-  const categoryBreakdown = CATEGORIES.map(cat => ({
-    ...cat,
-    count: houseProducts.filter(p => p.category === cat.id).length
-  })).filter(c => c.count > 0);
-
-  // Recent products
   const recentProducts = [...houseProducts]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 5);
+    .slice(0, 6);
 
-  // If no house, show onboarding
   if (!currentHouse) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+          transition={{ duration: 0.5 }}
+          className="max-w-md"
         >
-          <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/20 flex items-center justify-center">
-            <Package className="w-10 h-10 text-emerald-400" />
-          </div>
-          <h2 className="text-2xl font-bold text-[#fafafa] mb-2">¡Bienvenido!</h2>
-          <p className="text-[#a1a1a1] mb-8 max-w-md">
-            Empieza creando tu primera casa para organizar tus productos y ubicaciones.
-          </p>
-          <button
-            onClick={() => onNavigate('settings')}
-            className="px-6 py-3 bg-emerald-500 text-black text-sm font-semibold rounded-xl hover:bg-emerald-400 transition-colors duration-150 btn-press inline-flex items-center gap-2"
+          <motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-32 h-32 mx-auto mb-8 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border-2 border-emerald-500/30 flex items-center justify-center shadow-2xl shadow-emerald-500/20"
           >
-            Crear mi casa
-            <ArrowRight className="w-4 h-4" />
-          </button>
+            <span className="text-6xl">🏠</span>
+          </motion.div>
+          <h2 className="text-3xl font-bold text-[#fafafa] mb-4">
+            ¡Empieza tu aventura!
+          </h2>
+          <p className="text-base text-[#a1a1a1] mb-8 leading-relaxed">
+            Crea tu primera casa para comenzar a organizar tus productos y ubicaciones de forma inteligente.
+          </p>
+          <motion.button
+            onClick={() => onNavigate('settings')}
+            whileTap={{ scale: 0.97 }}
+            className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-base font-semibold rounded-2xl hover:from-emerald-400 hover:to-teal-400 transition-all duration-200 shadow-lg shadow-emerald-500/30 inline-flex items-center gap-3"
+          >
+            <Plus className="w-5 h-5" />
+            Crear mi primera casa
+            <ArrowRight className="w-5 h-5" />
+          </motion.button>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Welcome message */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-3xl p-8"
+      >
+        <div className="flex items-center gap-4">
+          <motion.div
+            animate={{ rotate: [0, 5, -5, 0] }}
+            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+            className="text-5xl"
+          >
+            👋
+          </motion.div>
+          <div>
+            <h2 className="text-2xl font-bold text-[#fafafa] mb-1">
+              ¡Hola! Bienvenido a {currentHouse.name}
+            </h2>
+            <p className="text-sm text-[#a1a1a1]">
+              Tienes {totalProducts} productos en {totalLocations} ubicaciones
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Stats grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Productos', value: totalProducts, icon: Package, color: 'emerald' },
-          { label: 'Lugares', value: totalLocations, icon: MapPin, color: 'blue' },
-          { label: 'Por caducar', value: expiringProducts.length, icon: AlertTriangle, color: 'yellow' },
-          { label: 'Caducados', value: expiredProducts.length, icon: TrendingUp, color: 'red' },
-        ].map((stat, i) => {
-          const Icon = stat.icon;
-          return (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: i * 0.08, ease: [0.23, 1, 0.32, 1] }}
-              className="p-4 bg-[#141414] border border-[#262626] rounded-xl"
-            >
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-3 ${
-                stat.color === 'emerald' ? 'bg-emerald-500/10' :
-                stat.color === 'blue' ? 'bg-blue-500/10' :
-                stat.color === 'yellow' ? 'bg-yellow-500/10' :
-                'bg-red-500/10'
-              }`}>
-                <Icon className={`w-4 h-4 ${
-                  stat.color === 'emerald' ? 'text-emerald-400' :
-                  stat.color === 'blue' ? 'text-blue-400' :
-                  stat.color === 'yellow' ? 'text-yellow-400' :
-                  'text-red-400'
-                }`} />
-              </div>
-              <p className="text-2xl font-bold text-[#fafafa]">{stat.value}</p>
-              <p className="text-xs text-[#525252]">{stat.label}</p>
-            </motion.div>
-          );
-        })}
+          { label: 'Productos', value: totalProducts, icon: '📦', color: 'from-emerald-500/20 to-teal-500/20', border: 'border-emerald-500/30' },
+          { label: 'Lugares', value: totalLocations, icon: '📍', color: 'from-blue-500/20 to-cyan-500/20', border: 'border-blue-500/30' },
+          { label: 'Por caducar', value: expiringProducts.length, icon: '⏰', color: 'from-yellow-500/20 to-orange-500/20', border: 'border-yellow-500/30' },
+          { label: 'Categorías', value: new Set(houseProducts.map(p => p.category)).size, icon: '🏷️', color: 'from-purple-500/20 to-pink-500/20', border: 'border-purple-500/30' },
+        ].map((stat, i) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: i * 0.1 }}
+            whileHover={{ y: -4, scale: 1.02 }}
+            className={`p-6 bg-gradient-to-br ${stat.color} border-2 ${stat.border} rounded-3xl backdrop-blur-sm`}
+          >
+            <div className="text-4xl mb-3">{stat.icon}</div>
+            <p className="text-3xl font-bold text-[#fafafa] mb-1">{stat.value}</p>
+            <p className="text-xs font-medium text-[#a1a1a1] uppercase tracking-wider">{stat.label}</p>
+          </motion.div>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -116,46 +117,66 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
-          className="lg:col-span-2 bg-[#141414] border border-[#262626] rounded-xl"
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="lg:col-span-2 bg-[#141414] border border-[#262626] rounded-3xl overflow-hidden"
         >
-          <div className="flex items-center justify-between p-4 border-b border-[#1a1a1a]">
-            <h3 className="text-sm font-semibold text-[#fafafa]">Productos por caducar</h3>
-            <button 
+          <div className="p-6 border-b border-[#1a1a1a] flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-orange-500/10 rounded-xl">
+                <AlertTriangle className="w-5 h-5 text-orange-400" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-[#fafafa]">Atención necesaria</h3>
+                <p className="text-xs text-[#525252]">Productos próximos a caducar</p>
+              </div>
+            </div>
+            <motion.button
               onClick={() => onNavigate('alerts')}
-              className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors duration-150 flex items-center gap-1"
+              whileTap={{ scale: 0.95 }}
+              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors duration-200 flex items-center gap-1"
             >
               Ver todos <ArrowRight className="w-3 h-3" />
-            </button>
+            </motion.button>
           </div>
-          <div className="p-4">
+          <div className="p-6">
             {expiringProducts.length === 0 ? (
-              <div className="text-center py-8">
+              <div className="text-center py-12">
+                <motion.div
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-5xl mb-4"
+                >
+                  ✅
+                </motion.div>
                 <p className="text-sm text-[#525252]">¡Todo en orden! No hay productos próximos a caducar.</p>
               </div>
             ) : (
-              <div className="space-y-2">
-                {expiringProducts.slice(0, 5).map((product) => {
+              <div className="space-y-3">
+                {expiringProducts.slice(0, 4).map((product, i) => {
                   const status = getExpirationStatus(product.expirationDate);
                   const location = houseLocations.find(l => l.id === product.locationId);
                   return (
-                    <div
+                    <motion.div
                       key={product.id}
-                      className="flex items-center justify-between p-3 bg-[#0a0a0a] rounded-lg"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      whileHover={{ x: 4 }}
+                      className="flex items-center justify-between p-4 bg-[#0a0a0a] rounded-2xl hover:bg-[#1a1a1a] transition-colors duration-200"
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg">
+                      <div className="flex items-center gap-4">
+                        <span className="text-3xl">
                           {CATEGORIES.find(c => c.id === product.category)?.icon || '📦'}
                         </span>
                         <div>
-                          <p className="text-sm font-medium text-[#fafafa]">{product.name}</p>
+                          <p className="text-sm font-semibold text-[#fafafa]">{product.name}</p>
                           <p className="text-xs text-[#525252]">{location?.name}</p>
                         </div>
                       </div>
-                      <span className={`text-xs px-2 py-1 rounded-full border ${getExpirationColor(status)}`}>
-                        {product.expirationDate ? formatRelativeDate(product.expirationDate) : 'Sin fecha'}
+                      <span className={`text-xs font-semibold px-3 py-1.5 rounded-full border ${getExpirationColor(status)}`}>
+                        {product.expirationDate ? new Date(product.expirationDate).toLocaleDateString('es') : 'Sin fecha'}
                       </span>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -163,37 +184,37 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           </div>
         </motion.div>
 
-        {/* By type */}
+        {/* Quick actions */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4, ease: [0.23, 1, 0.32, 1] }}
-          className="bg-[#141414] border border-[#262626] rounded-xl"
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="bg-[#141414] border border-[#262626] rounded-3xl p-6"
         >
-          <div className="p-4 border-b border-[#1a1a1a]">
-            <h3 className="text-sm font-semibold text-[#fafafa]">Por tipo</h3>
-          </div>
-          <div className="p-4 space-y-3">
-            {PRODUCT_TYPES.map((type) => {
-              const count = houseProducts.filter(p => p.productType === type.id).length;
-              const IconComponent = type.id === 'food' ? Apple : type.id === 'medicine' ? Pill : type.id === 'cleaning' ? Droplets : type.id === 'bathroom' ? Bath : Package;
-              const colorClass = type.color === 'emerald' ? 'text-emerald-400 bg-emerald-400/10' :
-                type.color === 'red' ? 'text-red-400 bg-red-400/10' :
-                type.color === 'blue' ? 'text-blue-400 bg-blue-400/10' :
-                type.color === 'purple' ? 'text-purple-400 bg-purple-400/10' :
-                'text-[#525252] bg-[#1a1a1a]';
-              return (
-                <div key={type.id} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className={`p-1.5 rounded-lg ${colorClass}`}>
-                      <IconComponent className="w-3.5 h-3.5" />
-                    </span>
-                    <span className="text-xs text-[#a1a1a1]">{type.name}</span>
-                  </div>
-                  <span className="text-xs font-mono text-[#525252]">{count}</span>
+          <h3 className="text-base font-bold text-[#fafafa] mb-6">Acciones rápidas</h3>
+          <div className="space-y-3">
+            {[
+              { emoji: '📦', label: 'Añadir producto', page: 'products', color: 'from-emerald-500/20 to-teal-500/20' },
+              { emoji: '📍', label: 'Nuevo lugar', page: 'locations', color: 'from-blue-500/20 to-cyan-500/20' },
+              { emoji: '👨‍🍳', label: 'Generar recetas', page: 'recipes', color: 'from-purple-500/20 to-pink-500/20' },
+            ].map((action, i) => (
+              <motion.button
+                key={action.label}
+                onClick={() => onNavigate(action.page)}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+                whileTap={{ scale: 0.97 }}
+                whileHover={{ x: 4 }}
+                className={`w-full flex items-center gap-4 p-4 bg-gradient-to-r ${action.color} border border-[#262626] rounded-2xl hover:border-[#333] transition-all duration-200 text-left`}
+              >
+                <span className="text-3xl">{action.emoji}</span>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-[#fafafa]">{action.label}</p>
                 </div>
-              );
-            })}
+                <ArrowRight className="w-4 h-4 text-[#525252]" />
+              </motion.button>
+            ))}
           </div>
         </motion.div>
       </div>
@@ -202,51 +223,68 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5, ease: [0.23, 1, 0.32, 1] }}
-        className="bg-[#141414] border border-[#262626] rounded-xl"
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="bg-[#141414] border border-[#262626] rounded-3xl overflow-hidden"
       >
-        <div className="flex items-center justify-between p-4 border-b border-[#1a1a1a]">
-          <h3 className="text-sm font-semibold text-[#fafafa]">Añadidos recientemente</h3>
-          <button 
+        <div className="p-6 border-b border-[#1a1a1a] flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-emerald-500/10 rounded-xl">
+              <Package className="w-5 h-5 text-emerald-400" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-[#fafafa]">Añadidos recientemente</h3>
+              <p className="text-xs text-[#525252]">Últimos productos</p>
+            </div>
+          </div>
+          <motion.button
             onClick={() => onNavigate('products')}
-            className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors duration-150 flex items-center gap-1"
+            whileTap={{ scale: 0.95 }}
+            className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors duration-200 flex items-center gap-1"
           >
             Ver todos <ArrowRight className="w-3 h-3" />
-          </button>
+          </motion.button>
         </div>
-        <div className="p-4">
+        <div className="p-6">
           {recentProducts.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-sm text-[#525252] mb-3">No hay productos todavía</p>
-              <button
-                onClick={() => onNavigate('products')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors duration-150 inline-flex items-center gap-1"
+            <div className="text-center py-12">
+              <motion.div
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="text-5xl mb-4"
               >
-                <Plus className="w-3 h-3" /> Añadir producto
-              </button>
+                📦
+              </motion.div>
+              <p className="text-sm text-[#525252] mb-4">No hay productos todavía</p>
+              <motion.button
+                onClick={() => onNavigate('products')}
+                whileTap={{ scale: 0.97 }}
+                className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors duration-200 inline-flex items-center gap-1"
+              >
+                <Plus className="w-3 h-3" /> Añadir primer producto
+              </motion.button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {recentProducts.map((product) => {
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {recentProducts.map((product, i) => {
                 const location = houseLocations.find(l => l.id === product.locationId);
-                const status = getExpirationStatus(product.expirationDate);
                 return (
-                  <div key={product.id} className="p-3 bg-[#0a0a0a] rounded-lg">
-                    <div className="flex items-start justify-between mb-2">
-                      <span className="text-lg">
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.05 }}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    className="p-5 bg-[#0a0a0a] rounded-2xl hover:bg-[#1a1a1a] transition-all duration-200"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <span className="text-3xl">
                         {CATEGORIES.find(c => c.id === product.category)?.icon || '📦'}
                       </span>
-                      {status !== 'none' && status !== 'ok' && (
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded border ${getExpirationColor(status)}`}>
-                          {getExpirationLabel(status)}
-                        </span>
-                      )}
+                      <span className="text-xs font-mono text-[#525252]">{product.quantity} {product.unit}</span>
                     </div>
-                    <p className="text-sm font-medium text-[#fafafa] truncate">{product.name}</p>
-                    <p className="text-xs text-[#525252] mt-0.5">
-                      {location?.name} · {product.quantity} {product.unit}
-                    </p>
-                  </div>
+                    <p className="text-sm font-semibold text-[#fafafa] mb-1 truncate">{product.name}</p>
+                    <p className="text-xs text-[#525252] truncate">{location?.name}</p>
+                  </motion.div>
                 );
               })}
             </div>
