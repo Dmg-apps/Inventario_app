@@ -1,6 +1,24 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+/**
+ * Tipo de producto disponible en la app
+ */
+type ProductType = 'food' | 'medicine' | 'cleaning' | 'bathroom' | 'other';
+
+/**
+ * Nivel de llenado para productos de limpieza y baño
+ */
+type FillLevel = 'full' | 'medium' | 'low' | 'empty';
+
+/**
+ * Rol de usuario en una casa
+ */
+type UserRole = 'admin' | 'member' | 'viewer';
+
+/**
+ * Usuario autenticado en el sistema
+ */
 interface User {
   id: string;
   email: string;

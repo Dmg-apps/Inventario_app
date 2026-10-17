@@ -1,29 +1,90 @@
 import { motion } from 'framer-motion';
+import { useMemo, useCallback } from 'react';
 import { useStore } from '../store/useStore';
-import { ArrowRight, Plus, TrendingUp, Package, MapPin, AlertTriangle } from 'lucide-react';
+import { ArrowRight, Plus, Package, AlertTriangle } from 'lucide-react';
 import { getExpirationStatus, getExpirationColor, CATEGORIES } from '../lib/utils';
 
+/**
+ * Props para el componente Dashboard
+ */
 interface DashboardProps {
+  /** Callback para navegar a otras páginas */
   onNavigate: (page: string) => void;
 }
 
+/**
+ * Página principal del dashboard
+ * 
+ * Muestra estadísticas generales, productos próximos a caducar,
+ * acciones rápidas y productos añadidos recientemente.
+ * 
+ * Optimizaciones aplicadas (ECC /react-performance):
+ * - useMemo para cálculos costosos
+ * - useCallback para funciones estables
+ * - React.memo implícito en componentes hijos
+ * 
+ * @example
+ * ```tsx
+ * <Dashboard onNavigate={setCurrentPage} />
+ * ```
+ */
 export default function Dashboard({ onNavigate }: DashboardProps) {
   const { houses, currentHouseId, locations, products } = useStore();
   
-  const currentHouse = houses.find(h => h.id === currentHouseId);
-  const houseLocations = locations.filter(l => l.houseId === currentHouseId);
-  const houseProducts = products.filter(p => houseLocations.some(l => l.id === p.locationId));
+  // ✅ useMemo: Solo recalcular cuando cambien las dependencias
+  const currentHouse = useMemo(
+    () => houses.find(h => h.id === currentHouseId),
+    [houses, currentHouseId]
+  );
+
+  const houseLocations = useMemo(
+    () => locations.filter(l => l.houseId === currentHouseId),
+    [locations, currentHouseId]
+  );
+
+  const houseProducts = useMemo(
+    () => products.filter(p => houseLocations.some(l => l.id === p.locationId)),
+    [products, houseLocations]
+  );
 
   const totalProducts = houseProducts.length;
   const totalLocations = houseLocations.length;
-  const expiringProducts = houseProducts.filter(p => {
-    const status = getExpirationStatus(p.expirationDate);
-    return status === 'expired' || status === 'today' || status === 'soon';
-  });
 
-  const recentProducts = [...houseProducts]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 6);
+  // ✅ useMemo: Filtrar productos próximos a caducar
+  const expiringProducts = useMemo(() => {
+    return houseProducts.filter(p => {
+      const status = getExpirationStatus(p.expirationDate);
+      return status === 'expired' || status === 'today' || status === 'soon';
+    });
+  }, [houseProducts]);
+
+  // ✅ useMemo: Productos recientes ordenados
+  const recentProducts = useMemo(() => {
+    return [...houseProducts]
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 6);
+  }, [houseProducts]);
+
+  // ✅ useCallback: Funciones estables para evitar re-renders
+  const handleNavigateToSettings = useCallback(() => {
+    onNavigate('settings');
+  }, [onNavigate]);
+
+  const handleNavigateToAlerts = useCallback(() => {
+    onNavigate('alerts');
+  }, [onNavigate]);
+
+  const handleNavigateToProducts = useCallback(() => {
+    onNavigate('products');
+  }, [onNavigate]);
+
+  const handleNavigateToLocations = useCallback(() => {
+    onNavigate('locations');
+  }, [onNavigate]);
+
+  const handleNavigateToRecipes = useCallback(() => {
+    onNavigate('recipes');
+  }, [onNavigate]);
 
   if (!currentHouse) {
     return (
@@ -48,7 +109,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             Crea tu primera casa para comenzar a organizar tus productos y ubicaciones de forma inteligente.
           </p>
           <motion.button
-            onClick={() => onNavigate('settings')}
+            onClick={handleNavigateToSettings}
             whileTap={{ scale: 0.97 }}
             className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-base font-semibold rounded-2xl hover:from-emerald-400 hover:to-teal-400 transition-all duration-200 shadow-lg shadow-emerald-500/30 inline-flex items-center gap-3"
           >

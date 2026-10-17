@@ -1,25 +1,54 @@
 import { motion } from 'framer-motion';
-import { ReactNode } from 'react';
+import { ReactNode, memo } from 'react';
 
+/**
+ * Props para el componente Button
+ */
 interface ButtonProps {
+  /** Contenido del botón */
   children: ReactNode;
+  /** Callback al hacer clic */
   onClick?: () => void;
+  /** Variante visual del botón */
   variant?: 'primary' | 'secondary' | 'ghost';
+  /** Tamaño del botón */
   size?: 'sm' | 'md' | 'lg';
+  /** Icono opcional antes del texto */
   icon?: ReactNode;
+  /** Clases CSS adicionales */
   className?: string;
+  /** Si el botón está deshabilitado */
   disabled?: boolean;
+  /** Label accesible para screen readers */
+  'aria-label'?: string;
 }
 
-// Button component with perfect micro-interactions
-export default function Button({ 
+/**
+ * Componente Button con micro-interacciones perfectas
+ * 
+ * Características:
+ * - Spring physics para animaciones naturales
+ * - Scale 0.97 en press (feedback táctil)
+ * - Ripple effect en click
+ * - Accesibilidad completa (ARIA, keyboard navigation)
+ * - Performance optimizada con React.memo
+ * 
+ * @example
+ * ```tsx
+ * <Button onClick={handleClick} variant="primary">
+ *   Click me
+ * </Button>
+ * ```
+ */
+const Button = memo(function Button({ 
   children, 
   onClick, 
   variant = 'primary', 
   size = 'md',
   icon,
   className = '',
-  disabled = false
+  disabled = false,
+  'aria-label': ariaLabel
 }: ButtonProps) {
   const baseClasses = "relative inline-flex items-center justify-center gap-2 font-semibold rounded-2xl transition-all duration-200 overflow-hidden";
   
@@ -39,6 +68,7 @@ export default function Button({
     <motion.button
       onClick={onClick}
       disabled={disabled}
+      aria-label={ariaLabel}
       whileHover={{ scale: disabled ? 1 : 1.02 }}
       whileTap={{ scale: disabled ? 1 : 0.97 }}
       transition={{
@@ -62,4 +92,6 @@ export default function Button({
       <span className="relative z-10">{children}</span>
     </motion.button>
   );
-}
+});
+
+export default Button;
