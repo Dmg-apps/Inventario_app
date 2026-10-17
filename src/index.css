@@ -1,1 +1,153 @@
 @import "tailwindcss";
+
+@theme {
+  --color-surface: #0a0a0a;
+  --color-surface-elevated: #141414;
+  --color-surface-hover: #1a1a1a;
+  --color-border: #262626;
+  --color-border-subtle: #1a1a1a;
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #a1a1a1;
+  --color-text-tertiary: #737373;
+  --color-accent: #ffffff;
+  --color-accent-muted: #404040;
+}
+
+/* Custom easing curves - Emil Kowalski's philosophy */
+:root {
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Button press feedback - scale(0.97) on :active */
+.btn-press {
+  transition: transform 160ms var(--ease-out-strong), background-color 200ms ease;
+}
+
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* Stagger animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-item {
+  opacity: 0;
+  animation: fadeInUp 500ms var(--ease-out-strong) forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0ms; }
+.stagger-item:nth-child(2) { animation-delay: 60ms; }
+.stagger-item:nth-child(3) { animation-delay: 120ms; }
+.stagger-item:nth-child(4) { animation-delay: 180ms; }
+.stagger-item:nth-child(5) { animation-delay: 240ms; }
+.stagger-item:nth-child(6) { animation-delay: 300ms; }
+.stagger-item:nth-child(7) { animation-delay: 360ms; }
+.stagger-item:nth-child(8) { animation-delay: 420ms; }
+
+/* Hover animations - only for fine pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  .hover-lift {
+    transition: transform 200ms var(--ease-out-strong), box-shadow 200ms var(--ease-out-strong);
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Toast enter animation using @starting-style */
+.toast-enter {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 400ms var(--ease-out-strong), transform 400ms var(--ease-out-strong);
+  
+  @starting-style {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .stagger-item {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Clip-path reveal animation */
+.clip-reveal {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 600ms var(--ease-in-out-strong);
+}
+
+.clip-reveal.revealed {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Glow effect */
+.glow {
+  position: relative;
+}
+
+.glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent, rgba(255,255,255,0.05));
+  opacity: 0;
+  transition: opacity 300ms var(--ease-out-strong);
+  pointer-events: none;
+}
+
+.glow:hover::before {
+  opacity: 1;
+}
