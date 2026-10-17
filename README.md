@@ -19,24 +19,31 @@ Aplicación web para gestionar el inventario de tu hogar con alertas de caducida
 - 📱 **Soporte NFC**: Asocia tags NFC a ubicaciones para acceso rápido
 - 👥 **Multi-usuario**: Comparte el inventario con miembros de tu hogar
 
-## 🎨 Skills de Diseño Engineering Aplicadas
+## 🎨 Diseño User-Friendly
 
-Este proyecto implementa las mejores prácticas de diseño de Emil Kowalski:
+Este proyecto implementa un diseño moderno, amigable y accesible:
 
-✅ **Custom easing curves** - No usa CSS defaults, usa curvas personalizadas más naturales  
-✅ **Spring physics** - Interacciones con física real para sentirse naturales  
-✅ **Scale 0.97 en botones** - Feedback táctil instantáneo al presionar  
-✅ **Stagger animations** - Animaciones escalonadas para listas (30-80ms entre items)  
+### Paleta de Colores
+✅ **Fondos suaves** - `#0f0f10` en lugar de negro puro  
+✅ **Acentos cálidos** - Gradientes blue/cyan más amigables  
+✅ **Colores semánticos** - Success, error, warning, info bien definidos  
+✅ **Alto contraste** - WCAG AA compliance  
+
+### Animaciones
+✅ **Custom easing curves** - Curvas personalizadas más naturales  
+✅ **Spring physics** - Interacciones con física real  
+✅ **Scale 0.97 en botones** - Feedback táctil instantáneo  
+✅ **Stagger animations** - Animaciones escalonadas (30-80ms)  
 ✅ **Reduced motion support** - Respeta preferencias de accesibilidad  
-✅ **Hover states con media queries** - Solo en dispositivos con hover real  
-✅ **Solo animar transform y opacity** - Performance optimizada en GPU  
-✅ **Interruptible animations** - Las animaciones se pueden interrumpir suavemente  
-✅ **Never animate from scale(0)** - Siempre desde scale(0.95) con opacity  
-✅ **Correct transform-origin** - Popovers desde trigger, modals centrados  
-✅ **Asymmetric enter/exit** - Entradas más lentas, salidas más rápidas  
-✅ **Toast system inspirado en Sonner** - Animaciones spring-based perfectas  
+✅ **Solo animar transform/opacity** - Performance optimizada en GPU  
 
-Ver [`SKILLS-DISENO.md`](./SKILLS-DISENO.md) para detalles completos.
+### Accesibilidad
+✅ **Focus states visibles** - Ring azul en todos los inputs  
+✅ **ARIA labels** - En todos los componentes interactivos  
+✅ **Navegación por teclado** - Completa y funcional  
+✅ **Contraste WCAG AA** - Mínimo 4.5:1  
+
+Ver [`REDISENO-COLORES.md`](./REDISENO-COLORES.md) y [`SKILLS-DISENO.md`](./SKILLS-DISENO.md) para detalles completos.
 
 ## 📊 Importar desde Excel
 

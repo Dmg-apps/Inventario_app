@@ -32,11 +32,12 @@ export default function AuthPage() {
   const strength = getPasswordStrength(password);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#0d0d0d] to-[#0a0a0a] flex items-center justify-center px-6 py-12 relative overflow-hidden">
-      {/* Background decorations */}
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0f10] via-[#131316] to-[#0f0f10] flex items-center justify-center px-6 py-12 relative overflow-hidden">
+      {/* Background decorations - más suaves */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-3xl" />
       </div>
 
       <motion.div
@@ -52,7 +53,7 @@ export default function AuthPage() {
           transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 15 }}
           className="text-center mb-8"
         >
-          <div className="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-emerald-500/30 to-teal-500/30 border-2 border-emerald-500/40 flex items-center justify-center shadow-2xl shadow-emerald-500/20">
+          <div className="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border-2 border-blue-500/30 flex items-center justify-center shadow-2xl shadow-blue-500/20">
             <span className="text-5xl">🏠</span>
           </div>
           <h1 className="text-3xl font-bold text-[#fafafa] mb-2">
@@ -70,15 +71,15 @@ export default function AuthPage() {
           transition={{ delay: 0.3, duration: 0.5 }}
           className="bg-[#141414]/80 backdrop-blur-xl border border-[#262626] rounded-3xl p-8 shadow-2xl"
         >
-          {/* Tabs */}
-          <div className="flex gap-2 mb-8 p-1.5 bg-[#0a0a0a] rounded-2xl">
+          {/* Tabs - más amigables */}
+          <div className="flex gap-2 mb-8 p-1.5 bg-[#0f0f10] rounded-2xl">
             <motion.button
               onClick={() => setIsLogin(true)}
               whileTap={{ scale: 0.97 }}
               className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all duration-300 ${
                 isLogin 
-                  ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/30' 
-                  : 'text-[#737373] hover:text-[#a1a1a1]'
+                  ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/30' 
+                  : 'text-[#6b6b6d] hover:text-[#a8a8aa]'
               }`}
             >
               Iniciar Sesión
@@ -88,8 +89,8 @@ export default function AuthPage() {
               whileTap={{ scale: 0.97 }}
               className={`flex-1 py-3 text-sm font-semibold rounded-xl transition-all duration-300 ${
                 !isLogin 
-                  ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/30' 
-                  : 'text-[#737373] hover:text-[#a1a1a1]'
+                  ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/30' 
+                  : 'text-[#6b6b6d] hover:text-[#a8a8aa]'
               }`}
             >
               Registrarse
@@ -109,13 +110,13 @@ export default function AuthPage() {
                     Nombre
                   </label>
                   <div className="relative">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#525252]" />
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4a4a4c]" />
                     <input
                       type="text"
                       placeholder="Tu nombre"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 bg-[#0a0a0a] border-2 border-[#262626] rounded-2xl text-base text-[#fafafa] placeholder:text-[#525252] focus:outline-none focus:border-emerald-500/50 transition-all duration-200"
+                      className="w-full pl-12 pr-4 py-4 bg-[#0f0f10] border-2 border-[#2a2a2c] rounded-2xl text-base text-[#fafafa] placeholder:text-[#4a4a4c] focus:outline-none focus:border-blue-500/50 focus:bg-[#131316] transition-all duration-200"
                       required
                     />
                   </div>
@@ -128,13 +129,13 @@ export default function AuthPage() {
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#525252]" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4a4a4c]" />
                 <input
                   type="email"
                   placeholder="tu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-[#0a0a0a] border-2 border-[#262626] rounded-2xl text-base text-[#fafafa] placeholder:text-[#525252] focus:outline-none focus:border-emerald-500/50 transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-4 bg-[#0f0f10] border-2 border-[#2a2a2c] rounded-2xl text-base text-[#fafafa] placeholder:text-[#4a4a4c] focus:outline-none focus:border-blue-500/50 focus:bg-[#131316] transition-all duration-200"
                   required
                 />
               </div>
@@ -145,20 +146,20 @@ export default function AuthPage() {
                 Contraseña
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#525252]" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4a4a4c]" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-12 py-4 bg-[#0a0a0a] border-2 border-[#262626] rounded-2xl text-base text-[#fafafa] placeholder:text-[#525252] focus:outline-none focus:border-emerald-500/50 transition-all duration-200"
+                  className="w-full pl-12 pr-12 py-4 bg-[#0f0f10] border-2 border-[#2a2a2c] rounded-2xl text-base text-[#fafafa] placeholder:text-[#4a4a4c] focus:outline-none focus:border-blue-500/50 focus:bg-[#131316] transition-all duration-200"
                   required
                 />
                 <motion.button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   whileTap={{ scale: 0.9 }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#525252] hover:text-[#a1a1a1] transition-colors duration-200"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#4a4a4c] hover:text-[#a8a8aa] transition-colors duration-200"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </motion.button>
@@ -206,19 +207,19 @@ export default function AuthPage() {
             <motion.button
               type="submit"
               whileTap={{ scale: 0.97 }}
-              className="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-base font-semibold rounded-2xl hover:from-emerald-400 hover:to-teal-400 transition-all duration-200 shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2"
+              className="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-base font-semibold rounded-2xl hover:from-blue-400 hover:to-cyan-400 transition-all duration-200 shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2"
             >
               {isLogin ? 'Entrar' : 'Crear cuenta'}
               <ArrowRight className="w-5 h-5" />
             </motion.button>
           </form>
 
-          <p className="text-sm text-[#525252] text-center mt-6">
+          <p className="text-sm text-[#4a4a4c] text-center mt-6">
             {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}{' '}
             <motion.button 
               onClick={() => setIsLogin(!isLogin)}
               whileTap={{ scale: 0.95 }}
-              className="text-emerald-400 hover:text-emerald-300 font-semibold transition-colors duration-200"
+              className="text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-200"
             >
               {isLogin ? 'Regístrate gratis' : 'Inicia sesión'}
             </motion.button>

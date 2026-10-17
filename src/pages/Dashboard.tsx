@@ -124,12 +124,12 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
 
   return (
     <div className="space-y-8">
-      {/* Welcome message */}
+      {/* Welcome message - más amigable */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-3xl p-8"
+        className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-3xl p-8"
       >
         <div className="flex items-center gap-4">
           <motion.div
@@ -150,13 +150,13 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         </div>
       </motion.div>
 
-      {/* Stats grid */}
+      {/* Stats grid - más amigable */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Productos', value: totalProducts, icon: '📦', color: 'from-emerald-500/20 to-teal-500/20', border: 'border-emerald-500/30' },
-          { label: 'Lugares', value: totalLocations, icon: '📍', color: 'from-blue-500/20 to-cyan-500/20', border: 'border-blue-500/30' },
-          { label: 'Por caducar', value: expiringProducts.length, icon: '⏰', color: 'from-yellow-500/20 to-orange-500/20', border: 'border-yellow-500/30' },
-          { label: 'Categorías', value: new Set(houseProducts.map(p => p.category)).size, icon: '🏷️', color: 'from-purple-500/20 to-pink-500/20', border: 'border-purple-500/30' },
+          { label: 'Productos', value: totalProducts, icon: '📦', color: 'from-blue-500/20 to-cyan-500/20', border: 'border-blue-500/30' },
+          { label: 'Lugares', value: totalLocations, icon: '📍', color: 'from-cyan-500/20 to-teal-500/20', border: 'border-cyan-500/30' },
+          { label: 'Por caducar', value: expiringProducts.length, icon: '⏰', color: 'from-orange-500/20 to-amber-500/20', border: 'border-orange-500/30' },
+          { label: 'Categorías', value: new Set(houseProducts.map(p => p.category)).size, icon: '🏷️', color: 'from-violet-500/20 to-purple-500/20', border: 'border-violet-500/30' },
         ].map((stat, i) => (
           <motion.div
             key={stat.label}
