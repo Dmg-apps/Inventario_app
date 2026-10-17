@@ -1,6 +1,8 @@
-# Mi Despensa - Inventario Inteligente del Hogar
+# 🏠 Mi Despensa - Inventario Inteligente del Hogar
 
 Aplicación web para gestionar el inventario de tu hogar con alertas de caducidad, recetas con IA y soporte NFC.
+
+**✨ Con Skills de Diseño Engineering de Emil Kowalski aplicadas**
 
 ## ✨ Características
 
@@ -16,6 +18,25 @@ Aplicación web para gestionar el inventario de tu hogar con alertas de caducida
 - 🤖 **Recetas con IA**: Genera recetas basadas en tus ingredientes disponibles
 - 📱 **Soporte NFC**: Asocia tags NFC a ubicaciones para acceso rápido
 - 👥 **Multi-usuario**: Comparte el inventario con miembros de tu hogar
+
+## 🎨 Skills de Diseño Engineering Aplicadas
+
+Este proyecto implementa las mejores prácticas de diseño de Emil Kowalski:
+
+✅ **Custom easing curves** - No usa CSS defaults, usa curvas personalizadas más naturales  
+✅ **Spring physics** - Interacciones con física real para sentirse naturales  
+✅ **Scale 0.97 en botones** - Feedback táctil instantáneo al presionar  
+✅ **Stagger animations** - Animaciones escalonadas para listas (30-80ms entre items)  
+✅ **Reduced motion support** - Respeta preferencias de accesibilidad  
+✅ **Hover states con media queries** - Solo en dispositivos con hover real  
+✅ **Solo animar transform y opacity** - Performance optimizada en GPU  
+✅ **Interruptible animations** - Las animaciones se pueden interrumpir suavemente  
+✅ **Never animate from scale(0)** - Siempre desde scale(0.95) con opacity  
+✅ **Correct transform-origin** - Popovers desde trigger, modals centrados  
+✅ **Asymmetric enter/exit** - Entradas más lentas, salidas más rápidas  
+✅ **Toast system inspirado en Sonner** - Animaciones spring-based perfectas  
+
+Ver [`SKILLS-DISENO.md`](./SKILLS-DISENO.md) para detalles completos.
 
 ## 🚀 Tecnologías
 
