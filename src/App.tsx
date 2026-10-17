@@ -37,9 +37,6 @@ function ToastContainer({ toasts, onDismiss }: { toasts: Toast[]; onDismiss: (id
 // Interactive card with spring-based mouse tracking
 function InteractiveCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  
   const rotateX = useSpring(useMotionValue(0), { stiffness: 100, damping: 20 });
   const rotateY = useSpring(useMotionValue(0), { stiffness: 100, damping: 20 });
 
@@ -50,11 +47,8 @@ function InteractiveCard({ children, className = '' }: { children: React.ReactNo
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    
-    mouseX.set(x);
-    mouseY.set(y);
-    rotateX.set(-(y - centerY) / 20);
-    rotateY.set((x - centerX) / 20);
+    rotateX.set(-(y - centerY) / 25);
+    rotateY.set((x - centerX) / 25);
   };
 
   const handleMouseLeave = () => {
@@ -75,94 +69,89 @@ function InteractiveCard({ children, className = '' }: { children: React.ReactNo
   );
 }
 
-// Principle card component
-function PrincipleCard({ number, title, description, icon }: { 
-  number: string; title: string; description: string; icon: string 
+// Provider card
+function ProviderCard({ icon, name, description, status }: { 
+  icon: string; name: string; description: string; status: string 
 }) {
   return (
     <InteractiveCard className="group">
-      <div className="relative p-6 bg-[#141414] border border-[#262626] rounded-2xl hover-lift transition-colors duration-200 hover:border-[#333]">
-        <div className="flex items-start justify-between mb-4">
-          <span className="text-3xl">{icon}</span>
-          <span className="text-xs font-mono text-[#525252]">{number}</span>
+      <div className="relative p-5 bg-[#141414] border border-[#262626] rounded-2xl hover-lift transition-colors duration-200 hover:border-[#333]">
+        <div className="flex items-start justify-between mb-3">
+          <span className="text-2xl">{icon}</span>
+          <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
+            status === 'stable' ? 'bg-green-400/10 text-green-400' : 
+            status === 'beta' ? 'bg-yellow-400/10 text-yellow-400' :
+            'bg-blue-400/10 text-blue-400'
+          }`}>{status}</span>
         </div>
-        <h3 className="text-lg font-semibold text-[#fafafa] mb-2">{title}</h3>
-        <p className="text-sm text-[#a1a1a1] leading-relaxed">{description}</p>
+        <h3 className="text-base font-semibold text-[#fafafa] mb-1.5">{name}</h3>
+        <p className="text-xs text-[#a1a1a1] leading-relaxed">{description}</p>
       </div>
     </InteractiveCard>
   );
 }
 
-// Code comparison component
-function CodeComparison({ before, after, label }: { before: string; after: string; label: string }) {
-  return (
-    <div className="space-y-3">
-      <span className="text-xs font-mono text-[#525252] uppercase tracking-wider">{label}</span>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div className="p-4 bg-[#141414] border border-[#262626] rounded-xl">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-red-400/60" />
-            <span className="text-xs text-[#737373]">Before</span>
-          </div>
-          <code className="text-xs text-[#a1a1a1] font-mono leading-relaxed">{before}</code>
-        </div>
-        <div className="p-4 bg-[#141414] border border-[#262626] rounded-xl">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-green-400/60" />
-            <span className="text-xs text-[#737373]">After</span>
-          </div>
-          <code className="text-xs text-[#fafafa] font-mono leading-relaxed">{after}</code>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Easing visualizer
-function EasingVisualizer() {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const easings = [
-    { name: 'ease-out', value: 'cubic-bezier(0.23, 1, 0.32, 1)', color: '#4ade80' },
-    { name: 'ease-in-out', value: 'cubic-bezier(0.77, 0, 0.175, 1)', color: '#60a5fa' },
-    { name: 'ease (default)', value: 'ease', color: '#a78bfa' },
-    { name: 'ease-in', value: 'ease-in', color: '#f87171' },
+// Terminal component
+function Terminal() {
+  const [currentLine, setCurrentLine] = useState(0);
+  const lines = [
+    { prefix: '$', text: 'npx @anthropic-ai/rea install', color: 'text-green-400' },
+    { prefix: '', text: '→ Installing REA agents v6.5.0...', color: 'text-[#737373]' },
+    { prefix: '', text: '→ Detecting providers...', color: 'text-[#737373]' },
+    { prefix: '✓', text: ' Ghidra 12.1.4 found', color: 'text-green-400' },
+    { prefix: '✓', text: ' Hopper Disassembler found', color: 'text-green-400' },
+    { prefix: '✓', text: ' MCP server configured', color: 'text-green-400' },
+    { prefix: '', text: '', color: '' },
+    { prefix: '$', text: 'rea analyze ./target.bin', color: 'text-green-400' },
+    { prefix: '', text: '→ Opening binary with Ghidra...', color: 'text-[#737373]' },
+    { prefix: '', text: '→ Running analysis pipeline...', color: 'text-[#737373]' },
+    { prefix: '✓', text: ' 47 functions decompiled', color: 'text-green-400' },
+    { prefix: '✓', text: ' Call graph generated', color: 'text-green-400' },
+    { prefix: '✓', text: ' Evidence collected', color: 'text-green-400' },
   ];
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentLine(prev => {
+        if (prev >= lines.length - 1) {
+          setTimeout(() => setCurrentLine(0), 3000);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 400);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h4 className="text-sm font-medium text-[#fafafa]">Easing Comparison</h4>
-        <button 
-          onClick={() => setIsPlaying(!isPlaying)}
-          className="px-3 py-1.5 text-xs font-medium bg-[#262626] text-[#fafafa] rounded-lg btn-press hover:bg-[#333] transition-colors duration-150"
-        >
-          {isPlaying ? 'Reset' : 'Play'}
-        </button>
+    <div className="bg-[#0a0a0a] border border-[#262626] rounded-2xl overflow-hidden">
+      <div className="flex items-center gap-2 px-4 py-3 bg-[#141414] border-b border-[#1a1a1a]">
+        <div className="w-3 h-3 rounded-full bg-[#333]" />
+        <div className="w-3 h-3 rounded-full bg-[#333]" />
+        <div className="w-3 h-3 rounded-full bg-[#333]" />
+        <span className="ml-2 text-xs text-[#525252] font-mono">terminal</span>
       </div>
-      <div className="space-y-3">
-        {easings.map((easing) => (
-          <div key={easing.name} className="flex items-center gap-4">
-            <span className="text-xs font-mono text-[#737373] w-28 shrink-0">{easing.name}</span>
-            <div className="flex-1 h-8 bg-[#1a1a1a] rounded-lg overflow-hidden relative">
-              <motion.div
-                className="h-full rounded-lg"
-                style={{ backgroundColor: easing.color }}
-                animate={isPlaying ? { width: ['0%', '100%'] } : { width: '0%' }}
-                transition={{ 
-                  duration: 1, 
-                  ease: easing.value as any,
-                  repeat: isPlaying ? Infinity : 0,
-                  repeatDelay: 0.5
-                }}
-              />
-            </div>
-          </div>
+      <div className="p-4 font-mono text-xs leading-relaxed min-h-[280px]">
+        {lines.slice(0, currentLine + 1).map((line, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -4 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+            className={`${line.color} ${i === currentLine ? '' : ''}`}
+          >
+            {line.prefix && <span className="mr-2">{line.prefix}</span>}
+            {line.text}
+          </motion.div>
         ))}
+        {currentLine < lines.length - 1 && (
+          <motion.span
+            animate={{ opacity: [1, 0] }}
+            transition={{ duration: 0.6, repeat: Infinity }}
+            className="inline-block w-2 h-3.5 bg-[#525252] ml-0.5"
+          />
+        )}
       </div>
-      <p className="text-xs text-[#737373] leading-relaxed">
-        Notice how <span className="text-green-400">ease-out</span> starts instantly and feels responsive, 
-        while <span className="text-red-400">ease-in</span> feels sluggish — the exact moment the user watches most closely has no movement.
-      </p>
     </div>
   );
 }
@@ -187,14 +176,20 @@ function Nav() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-gradient-to-br from-white/20 to-white/5 border border-white/10" />
-          <span className="text-sm font-semibold text-[#fafafa]">Design Engineering</span>
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500/30 to-blue-500/30 border border-purple-500/20 flex items-center justify-center">
+            <span className="text-xs font-bold text-purple-300">R</span>
+          </div>
+          <span className="text-sm font-semibold text-[#fafafa]">REA</span>
+          <span className="text-[10px] font-mono text-[#525252] bg-[#1a1a1a] px-1.5 py-0.5 rounded">v6.5</span>
         </div>
         <div className="hidden md:flex items-center gap-6">
-          <a href="#principles" className="text-sm text-[#a1a1a1] hover:text-[#fafafa] transition-colors duration-150">Principles</a>
-          <a href="#animations" className="text-sm text-[#a1a1a1] hover:text-[#fafafa] transition-colors duration-150">Animations</a>
-          <a href="#craft" className="text-sm text-[#a1a1a1] hover:text-[#fafafa] transition-colors duration-150">Craft</a>
+          <a href="#providers" className="text-sm text-[#a1a1a1] hover:text-[#fafafa] transition-colors duration-150">Providers</a>
+          <a href="#capabilities" className="text-sm text-[#a1a1a1] hover:text-[#fafafa] transition-colors duration-150">Capabilities</a>
+          <a href="#install" className="text-sm text-[#a1a1a1] hover:text-[#fafafa] transition-colors duration-150">Install</a>
+          <a href="https://github.com/morluto/rea" target="_blank" rel="noopener noreferrer" className="text-sm text-[#a1a1a1] hover:text-[#fafafa] transition-colors duration-150 btn-press">
+            GitHub ↗
+          </a>
         </div>
       </div>
     </motion.nav>
@@ -205,14 +200,15 @@ function Nav() {
 function Hero({ onToast }: { onToast: (msg: string, type: Toast['type']) => void }) {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.03),transparent_50%)]" />
+      {/* Background gradients */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.05),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(59,130,246,0.03),transparent_50%)]" />
       
       <motion.div 
         initial={{ opacity: 0, transform: 'translateY(20px) scale(0.98)' }}
         animate={{ opacity: 1, transform: 'translateY(0) scale(1)' }}
         transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-        className="text-center max-w-3xl relative z-10"
+        className="text-center max-w-4xl relative z-10"
       >
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
@@ -220,36 +216,60 @@ function Hero({ onToast }: { onToast: (msg: string, type: Toast['type']) => void
           transition={{ delay: 0.2, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#141414] border border-[#262626] rounded-full mb-8"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-          <span className="text-xs text-[#a1a1a1]">Skill loaded — emil-design-eng</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+          <span className="text-xs text-[#a1a1a1]">Reverse Engineer Anything — with AI agents</span>
         </motion.div>
 
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#fafafa] tracking-tight leading-[1.1] mb-6">
-          The craft of{' '}
-          <span className="bg-gradient-to-r from-white via-white/80 to-white/40 bg-clip-text text-transparent">
-            invisible details
+          Reverse engineer{' '}
+          <span className="bg-gradient-to-r from-purple-300 via-blue-300 to-cyan-300 bg-clip-text text-transparent">
+            anything
           </span>
         </h1>
         
         <p className="text-lg md:text-xl text-[#a1a1a1] leading-relaxed max-w-2xl mx-auto mb-10">
-          Most details users never consciously notice. That is the point. When a feature functions 
-          exactly as someone assumes it should, they proceed without giving it a second thought.
+          From app behavior down to native binaries. Unified MCP interface across 
+          Ghidra, Hopper, IDA, JADX, and more — with evidence-backed analysis.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <button 
-            onClick={() => onToast('Welcome! Explore the principles below.', 'success')}
+            onClick={() => {
+              navigator.clipboard.writeText('npx @anthropic-ai/rea install');
+              onToast('Install command copied!', 'success');
+            }}
             className="px-6 py-3 bg-white text-black text-sm font-medium rounded-xl btn-press hover:bg-white/90 transition-colors duration-150"
           >
-            Explore Principles
+            Get Started
           </button>
-          <button 
-            onClick={() => onToast('Scroll down to see animations in action', 'info')}
+          <a 
+            href="https://github.com/morluto/rea" 
+            target="_blank" 
+            rel="noopener noreferrer"
             className="px-6 py-3 bg-[#1a1a1a] text-[#fafafa] text-sm font-medium rounded-xl border border-[#262626] btn-press hover:bg-[#262626] transition-colors duration-150"
           >
-            See Animations
-          </button>
+            View on GitHub
+          </a>
         </div>
+
+        {/* Stats */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+          className="mt-16 grid grid-cols-3 gap-8 max-w-md mx-auto"
+        >
+          {[
+            { value: '3,545', label: 'Commits' },
+            { value: '135', label: 'Branches' },
+            { value: '37', label: 'Releases' },
+          ].map((stat) => (
+            <div key={stat.label} className="text-center">
+              <div className="text-xl font-bold text-[#fafafa]">{stat.value}</div>
+              <div className="text-xs text-[#525252]">{stat.label}</div>
+            </div>
+          ))}
+        </motion.div>
       </motion.div>
 
       {/* Scroll indicator */}
@@ -271,19 +291,21 @@ function Hero({ onToast }: { onToast: (msg: string, type: Toast['type']) => void
   );
 }
 
-// Principles section
-function Principles() {
-  const principles = [
-    { number: '01', title: 'Taste is trained', description: 'Good taste is not personal preference. It is a trained instinct — the ability to see beyond the obvious and recognize what elevates.', icon: '🎯' },
-    { number: '02', title: 'Unseen details compound', description: 'Every decision exists because the aggregate of invisible correctness creates interfaces people love without knowing why.', icon: '✨' },
-    { number: '03', title: 'Beauty is leverage', description: 'People select tools based on the overall experience. Good defaults and good animations are real differentiators.', icon: '⚡' },
-    { number: '04', title: 'Never animate from scale(0)', description: 'Nothing in the real world disappears and reappears completely. Start from scale(0.95) with opacity.', icon: '🎭' },
-    { number: '05', title: 'Buttons must feel responsive', description: 'Add transform: scale(0.97) on :active. This gives instant feedback that the UI is truly listening.', icon: '👆' },
-    { number: '06', title: 'Speed is perception', description: 'A fast-spinning spinner makes loading feel faster. A 180ms select feels more responsive than 400ms.', icon: '🚀' },
+// Providers section
+function Providers() {
+  const providers = [
+    { icon: '🐘', name: 'Ghidra', description: 'NSA reverse engineering framework. Full decompilation, cross-references, and type analysis.', status: 'stable' },
+    { icon: '🦘', name: 'Hopper', description: 'macOS/Linux disassembler. Swift, Objective-C, and native binary analysis with MCP bridge.', status: 'stable' },
+    { icon: '📱', name: 'JADX', description: 'Android DEX to Java decompiler. APK analysis with resource extraction and smali support.', status: 'stable' },
+    { icon: '🌐', name: 'Browser (CDP)', description: 'Chrome DevTools Protocol. Web app behavior capture, network interception, and DOM analysis.', status: 'stable' },
+    { icon: '🤖', name: 'ADB', description: 'Android Debug Bridge. Device automation, APK installation, and runtime behavior capture.', status: 'stable' },
+    { icon: '⚡', name: 'Kuna', description: 'Deep analysis provider. Procedure search, pseudocode, and assembly from project exports.', status: 'beta' },
+    { icon: '🔧', name: 'Cutter', description: 'Rizin-based GUI. Open-source reverse engineering with radare2 backend.', status: 'beta' },
+    { icon: '📦', name: 'Firmware', description: 'Binwalk and Unblob integration. Firmware extraction and embedded system analysis.', status: 'new' },
   ];
 
   return (
-    <section id="principles" className="py-32 px-6">
+    <section id="providers" className="py-32 px-6">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -292,16 +314,20 @@ function Principles() {
           transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
           className="mb-16"
         >
-          <span className="text-xs font-mono text-[#525252] uppercase tracking-wider mb-3 block">Core Philosophy</span>
+          <span className="text-xs font-mono text-[#525252] uppercase tracking-wider mb-3 block">Providers</span>
           <h2 className="text-3xl md:text-4xl font-bold text-[#fafafa] tracking-tight">
-            Principles that compound
+            Unified analysis across tools
           </h2>
+          <p className="text-[#a1a1a1] mt-4 max-w-2xl">
+            One interface to rule them all. REA connects to multiple reverse engineering tools 
+            through a consistent MCP protocol, preserving evidence and provenance.
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {principles.map((principle, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {providers.map((provider, i) => (
             <motion.div
-              key={principle.number}
+              key={provider.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
@@ -311,7 +337,7 @@ function Principles() {
                 ease: [0.23, 1, 0.32, 1] 
               }}
             >
-              <PrincipleCard {...principle} />
+              <ProviderCard {...provider} />
             </motion.div>
           ))}
         </div>
@@ -320,250 +346,153 @@ function Principles() {
   );
 }
 
-// Animation decision framework
-function AnimationFramework() {
-  return (
-    <section id="animations" className="py-32 px-6 bg-[#0d0d0d]">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-          className="mb-16"
-        >
-          <span className="text-xs font-mono text-[#525252] uppercase tracking-wider mb-3 block">Animation Framework</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#fafafa] tracking-tight mb-4">
-            The decision framework
-          </h2>
-          <p className="text-[#a1a1a1] max-w-2xl">
-            Before writing any animation code, answer these questions in order.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-            className="p-6 bg-[#141414] border border-[#262626] rounded-2xl"
-          >
-            <EasingVisualizer />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
-            className="space-y-4"
-          >
-            <CodeComparison
-              label="Easing"
-              before="transition: all 300ms ease-in"
-              after="transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1)"
-            />
-            <CodeComparison
-              label="Entry Animation"
-              before="transform: scale(0)"
-              after="transform: scale(0.95); opacity: 0"
-            />
-            <CodeComparison
-              label="Button Press"
-              before="/* No active state */"
-              after=".button:active { transform: scale(0.97) }"
-            />
-          </motion.div>
-        </div>
-
-        {/* Duration table */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
-          className="mt-8 p-6 bg-[#141414] border border-[#262626] rounded-2xl"
-        >
-          <h4 className="text-sm font-medium text-[#fafafa] mb-4">Duration Guidelines</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {[
-              { element: 'Button press feedback', duration: '100-160ms' },
-              { element: 'Tooltips, small popovers', duration: '125-200ms' },
-              { element: 'Dropdowns, selects', duration: '150-250ms' },
-              { element: 'Modals, drawers', duration: '200-500ms' },
-            ].map((item) => (
-              <div key={item.element} className="flex items-center justify-between py-2 px-3 bg-[#0a0a0a] rounded-lg">
-                <span className="text-xs text-[#a1a1a1]">{item.element}</span>
-                <span className="text-xs font-mono text-[#fafafa]">{item.duration}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-// Interactive demo section
-function InteractiveDemo({ onToast }: { onToast: (msg: string, type: Toast['type']) => void }) {
-  const [activeTab, setActiveTab] = useState(0);
-  const tabs = ['Transform', 'Opacity', 'Clip-path'];
-
-  return (
-    <section id="craft" className="py-32 px-6">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-          className="mb-16"
-        >
-          <span className="text-xs font-mono text-[#525252] uppercase tracking-wider mb-3 block">Interactive</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#fafafa] tracking-tight mb-4">
-            Feel the difference
-          </h2>
-          <p className="text-[#a1a1a1] max-w-2xl">
-            Interact with these elements. Notice how buttons respond to your press, 
-            how cards track your cursor, and how transitions feel natural.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Button showcase */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-            className="p-6 bg-[#141414] border border-[#262626] rounded-2xl space-y-4"
-          >
-            <h4 className="text-sm font-medium text-[#fafafa]">Button Feedback</h4>
-            <p className="text-xs text-[#737373]">Press and hold — notice the scale(0.97) response</p>
-            <div className="flex flex-wrap gap-3">
-              <button 
-                onClick={() => onToast('Button pressed! scale(0.97) feedback', 'success')}
-                className="px-4 py-2.5 bg-white text-black text-sm font-medium rounded-lg btn-press"
-              >
-                Primary
-              </button>
-              <button 
-                onClick={() => onToast('Secondary action triggered', 'info')}
-                className="px-4 py-2.5 bg-[#262626] text-[#fafafa] text-sm font-medium rounded-lg btn-press hover:bg-[#333] transition-colors duration-150"
-              >
-                Secondary
-              </button>
-              <button 
-                onClick={() => onToast('Ghost button clicked', 'info')}
-                className="px-4 py-2.5 text-[#a1a1a1] text-sm font-medium rounded-lg btn-press hover:bg-[#1a1a1a] hover:text-[#fafafa] transition-all duration-150"
-              >
-                Ghost
-              </button>
-            </div>
-          </motion.div>
-
-          {/* Tab demo */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
-            className="p-6 bg-[#141414] border border-[#262626] rounded-2xl space-y-4"
-          >
-            <h4 className="text-sm font-medium text-[#fafafa]">Tab Transitions</h4>
-            <div className="relative flex gap-1 p-1 bg-[#0a0a0a] rounded-lg w-fit">
-              {tabs.map((tab, i) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(i)}
-                  className="relative px-4 py-2 text-sm font-medium rounded-md btn-press z-10 transition-colors duration-150"
-                >
-                  {activeTab === i && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute inset-0 bg-[#262626] rounded-md"
-                      transition={{ type: 'spring', duration: 0.4, bounce: 0.15 }}
-                    />
-                  )}
-                  <span className={`relative z-10 ${activeTab === i ? 'text-[#fafafa]' : 'text-[#737373]'}`}>
-                    {tab}
-                  </span>
-                </button>
-              ))}
-            </div>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-                className="p-4 bg-[#0a0a0a] rounded-xl"
-              >
-                {activeTab === 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-[#a1a1a1]">GPU-accelerated, runs on compositor thread</p>
-                    <code className="text-xs text-[#737373] font-mono">transform: translateX(100px) scale(1.05)</code>
-                  </div>
-                )}
-                {activeTab === 1 && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-[#a1a1a1]">Also GPU-accelerated, great for enter/exit</p>
-                    <code className="text-xs text-[#737373] font-mono">opacity: 0 → 1</code>
-                  </div>
-                )}
-                {activeTab === 2 && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-[#a1a1a1]">Powerful for reveals and wipes</p>
-                    <code className="text-xs text-[#737373] font-mono">clip-path: inset(0 100% 0 0) → inset(0)</code>
-                  </div>
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </motion.div>
-
-          {/* 3D card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
-            className="lg:col-span-2"
-          >
-            <InteractiveCard>
-              <div className="p-8 bg-[#141414] border border-[#262626] rounded-2xl text-center">
-                <p className="text-xs text-[#525252] mb-4">Move your cursor over this card</p>
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center">
-                  <span className="text-2xl">🎨</span>
-                </div>
-                <h3 className="text-lg font-semibold text-[#fafafa] mb-2">Spring-based tracking</h3>
-                <p className="text-sm text-[#a1a1a1] max-w-md mx-auto">
-                  Using <code className="text-xs bg-[#262626] px-1.5 py-0.5 rounded">useSpring</code> from Framer Motion 
-                  to interpolate rotation with momentum. Feels natural, not artificial.
-                </p>
-              </div>
-            </InteractiveCard>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Review checklist
-function ReviewChecklist() {
-  const items = [
-    { issue: 'transition: all', fix: 'Specify exact properties' },
-    { issue: 'scale(0) entry', fix: 'Start from scale(0.95) + opacity' },
-    { issue: 'ease-in on UI', fix: 'Switch to ease-out or custom curve' },
-    { issue: 'transform-origin: center on popover', fix: 'Set to trigger location' },
-    { issue: 'Animation on keyboard action', fix: 'Remove animation entirely' },
-    { issue: 'Duration > 300ms', fix: 'Reduce to 150-250ms' },
-    { issue: 'Hover without media query', fix: 'Add @media (hover: hover)' },
-    { issue: 'Keyframes on rapid element', fix: 'Use CSS transitions' },
+// Capabilities section
+function Capabilities() {
+  const capabilities = [
+    { 
+      title: 'MCP Server', 
+      description: 'Full Model Context Protocol support. Connect any AI agent to your analysis pipeline.',
+      icon: '🔌',
+      code: 'mcp serve --stdio'
+    },
+    { 
+      title: 'Evidence-Backed', 
+      description: 'Every observation is recorded with provenance. Cleanup ownership, cancellation, and retry semantics.',
+      icon: '📋',
+      code: 'Evidence { source, file_span, raw_result }'
+    },
+    { 
+      title: 'Batch Decompile', 
+      description: 'Decompile entire binaries or selected functions in batch. Cross-provider comparison support.',
+      icon: '⚡',
+      code: 'batch_decompile(functions: string[])'
+    },
+    { 
+      title: 'Call Graph Analysis', 
+      description: 'Generate and traverse call graphs across providers. Xref analysis with type information.',
+      icon: '🕸️',
+      code: 'get_call_graph(address, depth)'
+    },
+    { 
+      title: 'Cross-Platform', 
+      description: 'macOS, Linux, and Windows support. Native binaries, managed code, and firmware analysis.',
+      icon: '🖥️',
+      code: 'supports: [arm64, x64, m68k, 6502]'
+    },
+    { 
+      title: 'Session Management', 
+      description: 'Persistent analysis sessions with cache ownership, cleanup retry, and cancellation support.',
+      icon: '🔄',
+      code: 'session.open(target).analyze()'
+    },
   ];
 
+  return (
+    <section id="capabilities" className="py-32 px-6 bg-[#0d0d0d]">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          className="mb-16"
+        >
+          <span className="text-xs font-mono text-[#525252] uppercase tracking-wider mb-3 block">Capabilities</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#fafafa] tracking-tight">
+            Built for serious analysis
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {capabilities.map((cap, i) => (
+            <motion.div
+              key={cap.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.06, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <div className="p-5 bg-[#141414] border border-[#262626] rounded-2xl hover-lift h-full">
+                <span className="text-2xl mb-3 block">{cap.icon}</span>
+                <h3 className="text-base font-semibold text-[#fafafa] mb-2">{cap.title}</h3>
+                <p className="text-xs text-[#a1a1a1] leading-relaxed mb-3">{cap.description}</p>
+                <code className="text-[10px] text-[#525252] font-mono bg-[#0a0a0a] px-2 py-1 rounded block truncate">
+                  {cap.code}
+                </code>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Install section
+function Install({ onToast }: { onToast: (msg: string, type: Toast['type']) => void }) {
+  return (
+    <section id="install" className="py-32 px-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <span className="text-xs font-mono text-[#525252] uppercase tracking-wider mb-3 block">Quick Start</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#fafafa] tracking-tight mb-4">
+              Install in seconds
+            </h2>
+            <p className="text-[#a1a1a1] mb-8 leading-relaxed">
+              REA auto-detects available providers and configures itself. 
+              Just install and start analyzing.
+            </p>
+            
+            <div className="space-y-4">
+              {[
+                { step: '1', text: 'Install REA globally', cmd: 'npm install -g rea-agents' },
+                { step: '2', text: 'Run the setup wizard', cmd: 'rea setup' },
+                { step: '3', text: 'Start analyzing', cmd: 'rea analyze ./target' },
+              ].map((item) => (
+                <div key={item.step} className="flex items-start gap-3">
+                  <span className="w-6 h-6 rounded-full bg-[#262626] flex items-center justify-center text-xs text-[#a1a1a1] shrink-0 mt-0.5">
+                    {item.step}
+                  </span>
+                  <div>
+                    <p className="text-sm text-[#fafafa] mb-1">{item.text}</p>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(item.cmd);
+                        onToast(`Copied: ${item.cmd}`, 'success');
+                      }}
+                      className="text-xs font-mono text-[#737373] hover:text-[#a1a1a1] transition-colors duration-150 btn-press cursor-pointer"
+                    >
+                      <code>$ {item.cmd}</code>
+                      <span className="ml-2 text-[#525252]">↗</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <Terminal />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Architecture section
+function Architecture() {
   return (
     <section className="py-32 px-6 bg-[#0d0d0d]">
       <div className="max-w-6xl mx-auto">
@@ -572,11 +501,11 @@ function ReviewChecklist() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-          className="mb-16"
+          className="mb-16 text-center"
         >
-          <span className="text-xs font-mono text-[#525252] uppercase tracking-wider mb-3 block">Checklist</span>
+          <span className="text-xs font-mono text-[#525252] uppercase tracking-wider mb-3 block">Architecture</span>
           <h2 className="text-3xl md:text-4xl font-bold text-[#fafafa] tracking-tight">
-            Review checklist
+            How it works
           </h2>
         </motion.div>
 
@@ -584,59 +513,38 @@ function ReviewChecklist() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-          className="bg-[#141414] border border-[#262626] rounded-2xl overflow-hidden"
+          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          className="max-w-3xl mx-auto"
         >
-          <div className="grid grid-cols-[1fr_1fr] gap-px bg-[#262626]">
-            <div className="p-4 bg-[#141414]">
-              <span className="text-xs font-medium text-[#737373] uppercase tracking-wider">Issue</span>
-            </div>
-            <div className="p-4 bg-[#141414]">
-              <span className="text-xs font-medium text-[#737373] uppercase tracking-wider">Fix</span>
-            </div>
-            {items.map((item, i) => (
+          <div className="relative">
+            {/* Connection lines */}
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-purple-500/20 via-blue-500/20 to-cyan-500/20" />
+            
+            {[
+              { label: 'AI Agent', sublabel: 'Claude, GPT, or any MCP client', color: 'purple', position: 'top' },
+              { label: 'MCP Server', sublabel: 'stdio or HTTP transport', color: 'blue', position: 'middle' },
+              { label: 'Provider Layer', sublabel: 'Ghidra, Hopper, JADX, ADB...', color: 'cyan', position: 'bottom' },
+            ].map((layer, i) => (
               <motion.div
-                key={i}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+                key={layer.label}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05, duration: 0.3 }}
-                className="contents"
+                transition={{ duration: 0.5, delay: i * 0.15, ease: [0.23, 1, 0.32, 1] }}
+                className="relative flex items-center justify-center py-8"
               >
-                <div className="p-4 bg-[#141414] border-t border-[#1a1a1a]">
-                  <code className="text-xs text-red-400/80 font-mono">{item.issue}</code>
-                </div>
-                <div className="p-4 bg-[#141414] border-t border-[#1a1a1a]">
-                  <span className="text-xs text-[#a1a1a1]">{item.fix}</span>
+                <div className={`relative z-10 px-6 py-4 bg-[#141414] border border-[#262626] rounded-xl text-center ${
+                  layer.color === 'purple' ? 'border-purple-500/20' :
+                  layer.color === 'blue' ? 'border-blue-500/20' :
+                  'border-cyan-500/20'
+                }`}>
+                  <div className="text-sm font-semibold text-[#fafafa]">{layer.label}</div>
+                  <div className="text-xs text-[#737373] mt-1">{layer.sublabel}</div>
                 </div>
               </motion.div>
             ))}
           </div>
         </motion.div>
-      </div>
-    </section>
-  );
-}
-
-// Quote section
-function Quote() {
-  return (
-    <section className="py-32 px-6">
-      <div className="max-w-4xl mx-auto text-center">
-        <motion.blockquote
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-        >
-          <p className="text-2xl md:text-3xl text-[#fafafa] font-light leading-relaxed tracking-tight">
-            "All those unseen details combine to produce something that's just stunning, 
-            like a thousand barely audible voices all singing in tune."
-          </p>
-          <footer className="mt-6">
-            <span className="text-sm text-[#737373]">— Paul Graham</span>
-          </footer>
-        </motion.blockquote>
       </div>
     </section>
   );
@@ -647,16 +555,23 @@ function Footer() {
   return (
     <footer className="py-12 px-6 border-t border-[#1a1a1a]">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 rounded-md bg-gradient-to-br from-white/20 to-white/5 border border-white/10" />
-          <span className="text-sm text-[#737373]">Built with Emil Kowalski's design engineering principles</span>
+        <div className="flex items-center gap-3">
+          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-purple-500/30 to-blue-500/30 border border-purple-500/20 flex items-center justify-center">
+            <span className="text-[10px] font-bold text-purple-300">R</span>
+          </div>
+          <span className="text-sm text-[#737373]">
+            REA — Reverse Engineer Anything
+          </span>
         </div>
         <div className="flex items-center gap-4">
-          <a href="https://github.com/emilkowalski/skills" target="_blank" rel="noopener noreferrer" className="text-sm text-[#525252] hover:text-[#a1a1a1] transition-colors duration-150 btn-press">
+          <a href="https://github.com/morluto/rea" target="_blank" rel="noopener noreferrer" className="text-sm text-[#525252] hover:text-[#a1a1a1] transition-colors duration-150 btn-press">
             GitHub
           </a>
-          <a href="https://emilkowal.ski/skill" target="_blank" rel="noopener noreferrer" className="text-sm text-[#525252] hover:text-[#a1a1a1] transition-colors duration-150 btn-press">
-            Skills
+          <a href="https://github.com/morluto/rea/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="text-sm text-[#525252] hover:text-[#a1a1a1] transition-colors duration-150 btn-press">
+            Docs
+          </a>
+          <a href="https://github.com/morluto/rea/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" className="text-sm text-[#525252] hover:text-[#a1a1a1] transition-colors duration-150 btn-press">
+            License
           </a>
         </div>
       </div>
@@ -685,11 +600,10 @@ export default function App() {
     <div className="min-h-screen bg-[#0a0a0a] text-[#fafafa]">
       <Nav />
       <Hero onToast={addToast} />
-      <Principles />
-      <AnimationFramework />
-      <InteractiveDemo onToast={addToast} />
-      <Quote />
-      <ReviewChecklist />
+      <Providers />
+      <Capabilities />
+      <Architecture />
+      <Install onToast={addToast} />
       <Footer />
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
